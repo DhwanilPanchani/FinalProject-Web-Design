@@ -1,0 +1,210 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Box from '@mui/material/Box';
+import apiClient from '../api/apiClient';
+import logo from '../logo.svg'; // Import the logo
+
+const Navbar = () => {
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [mobileOpen, setMobileOpen] = useState(false); // State to handle drawer
+    const [anchorEl, setAnchorEl] = useState(null); // State to handle profile menu
+    const navigate = useNavigate(); // Use navigate for redirection
+    
+
+    useEffect(() => {
+        const fetchProfilePhoto = async () => {
+            try {
+                const response = await apiClient.get('/freelancers/profile', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                });
+                setProfilePhoto(response.data.data.profilePhoto);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchProfilePhoto();
+    }, []);
+
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen); // Toggle drawer state
+    };
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget); // Open profile menu
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null); // Close profile menu
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Remove token from localStorage
+        navigate('/login'); // Redirect to login page
+        handleMenuClose();
+    };
+
+    const drawer = (
+        <List>
+            <ListItem button onClick={() => { navigate('/landing'); setMobileOpen(false); }}>
+                <ListItemText primary="Home" />
+            </ListItem>
+            <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
+                <ListItemText primary="Opportunities" />
+            </ListItem>
+            <ListItem button onClick={() => { navigate('/profile'); setMobileOpen(false); }}>
+                <ListItemText primary="Profile" />
+            </ListItem>
+            <ListItem button onClick={() => { navigate('/'); setMobileOpen(false); }}>
+                <ListItemText primary="Logout" />
+            </ListItem>
+        </List>
+    );
+
+    return (
+        <>
+            <AppBar
+                position="fixed"
+                sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.6)', // Slightly more transparent
+                    backdropFilter: 'blur(12px)', // Enhance blur effect
+                    boxShadow: 'none', // Remove default shadow
+                    zIndex: 10, // Ensure navbar stays above other content
+                }}
+            >
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    {/* Logo */}
+                    <Box
+                        component="img"
+                        src={logo}
+                        alt="Logo"
+                        sx={{
+                            height: 40,
+                            cursor: 'pointer',
+                            transition: 'transform 0.3s ease',
+                            '&:hover': {
+                                transform: 'scale(1.1)', // Hover effect
+                            },
+                        }}
+                        onClick={() => navigate('/landing')} // Click redirects to home
+                    />
+
+                    {/* Desktop Navigation Links */}
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+                        <Button
+                            color="inherit"
+                            onClick={() => navigate('/landing')}
+                            sx={{
+                                color: '#000', // Text color for visibility on transparent navbar
+                                fontWeight: 'bold',
+                                mx: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                },
+                            }}
+                        >
+                            Home
+                        </Button>
+                        <Button
+                            color="inherit"
+                            onClick={() => navigate('/dashboard')}
+                            sx={{
+                                color: '#000',
+                                fontWeight: 'bold',
+                                mx: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                },
+                            }}
+                        >
+                            Opportunities
+                        </Button>
+                        <Button
+                            color="inherit"
+                            onClick={() => navigate('/profile')}
+                            sx={{
+                                color: '#000',
+                                fontWeight: 'bold',
+                                mx: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                },
+                            }}
+                        >
+                            Profile
+                        </Button>
+                        <IconButton
+                            onClick={handleMenuOpen}
+                            sx={{
+                                ml: 2,
+                                transition: 'transform 0.3s ease',
+                                '&:hover': {
+                                    transform: 'scale(1.1)',
+                                },
+                            }}
+                        >
+                            {/* Static Avatar with letter "F" */}
+                            <Avatar
+                                alt="Profile Icon"
+                                sx={{
+                                    ml: 0,
+                                    bgcolor: '#3f51b5', // Add a background color for the icon
+                                    color: '#fff', // White text color for contrast
+                                    transition: 'transform 0.3s ease',
+                                    '&:hover': {
+                                        transform: 'scale(1.3)',
+                                    },
+                                }}
+                            >
+                            F
+                            </Avatar>
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                        </Menu>
+                    </Box>
+
+                    {/* Hamburger Menu for Mobile */}
+                    <IconButton
+                        color="inherit"
+                        edge="start"
+                        aria-label="menu"
+                        sx={{ display: { xs: 'block', md: 'none' }, color: '#000' }}
+                        onClick={handleDrawerToggle}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+
+            {/* Drawer for Mobile Navigation */}
+            <Drawer
+                anchor="left"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                sx={{ display: { xs: 'block', md: 'none' } }}
+            >
+                {drawer}
+            </Drawer>
+        </>
+    );
+};
+
+export default Navbar;
+
+
