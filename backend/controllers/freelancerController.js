@@ -109,6 +109,16 @@
 const Freelancer = require('../models/Freelancer'); // Adjust the path if needed
 const cloudinary = require('../cloudinaryConfig'); // Import Cloudinary configuration
 
+//Get all freelancers
+const getAllFreelancers = async (req, res) => {
+    try {
+        const freelancers = await Freelancer.find();
+        res.status(200).json({ data: freelancers });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching freelancers', error });
+    }
+};
+
 // Get Freelancer Profile
 const getFreelancerProfile = async (req, res) => {
     try {
@@ -283,4 +293,5 @@ module.exports = {
     getFreelancerProfile,
     updateFreelancerProfile,
     createFreelancerProfile,
+    getAllFreelancers,
 };

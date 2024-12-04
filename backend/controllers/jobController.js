@@ -1,4 +1,4 @@
-const Job = require('./models/Job');
+const Job = require('../models/Job');
 
 // Get All Jobs
 const getAllJobs = async (req, res) => {
@@ -25,4 +25,22 @@ const getJobById = async (req, res) => {
     }
 };
 
-module.exports = { getAllJobs, getJobById };
+//Create job 
+const createJob = async (req, res) => {
+    try {
+        const { title, description, location, hourlyRate } = req.body;
+        const job = new Job({
+            title,
+            description,
+            location,
+            hourlyRate,
+            employer: req.user._id,
+        });
+        const savedJob = await job.save();
+        res.status(201).json({ data: savedJob });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating job', error });
+    }
+};
+
+module.exports = { getAllJobs, getJobById , createJob };

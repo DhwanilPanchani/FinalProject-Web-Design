@@ -15,7 +15,7 @@ router.route('/profile')
     .put(protect, updateFreelancerProfile);
 
 //GET route to get all freelancers
-router.get('/freelancers', getAllFreelancers);
+router.get('/', getAllFreelancers);
 
 // POST route to create a freelancer profile
 router.post(

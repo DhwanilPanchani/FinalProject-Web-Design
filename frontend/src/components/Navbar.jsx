@@ -21,11 +21,14 @@ const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false); // State to handle drawer
     const [anchorEl, setAnchorEl] = useState(null); // State to handle profile menu
     const navigate = useNavigate(); // Use navigate for redirection
-    
+    const [userRole, setUserRole] = useState(null); // Store user role
+
 
     useEffect(() => {
         const fetchProfilePhoto = async () => {
             try {
+                const role = localStorage.getItem('role'); // Retrieve role from localStorage
+                setUserRole(role); 
                 const response = await apiClient.get('/freelancers/profile', {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
                 });
@@ -51,6 +54,8 @@ const Navbar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token'); // Remove token from localStorage
+        localStorage.removeItem('role'); // Remove token from localStorage
+
         navigate('/login'); // Redirect to login page
         handleMenuClose();
     };
@@ -60,9 +65,21 @@ const Navbar = () => {
             <ListItem button onClick={() => { navigate('/landing'); setMobileOpen(false); }}>
                 <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
+            {/* <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
                 <ListItemText primary="Opportunities" />
-            </ListItem>
+            </ListItem> */}
+            { ( userRole === "employer" || userRole === "admin") && (
+                <ListItem button onClick={() => { navigate('/freelancers'); setMobileOpen(false); }}>
+                    {/* link /freelancers path to get the freelancers */}
+                    <ListItemText primary="Explore Talents" />
+                </ListItem> 
+            )}
+            { ( userRole === "freelancer" || userRole === "admin") && (
+                <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
+                     {/* link /opportunities path to get the jobs */}
+                    <ListItemText primary="Job Opportunities" />
+                </ListItem>
+            )}
             <ListItem button onClick={() => { navigate('/profile'); setMobileOpen(false); }}>
                 <ListItemText primary="Profile" />
             </ListItem>
@@ -116,6 +133,7 @@ const Navbar = () => {
                         >
                             Home
                         </Button>
+                        {(userRole === 'admin' || userRole === 'freelancer') && (
                         <Button
                             color="inherit"
                             onClick={() => navigate('/dashboard')}
@@ -130,6 +148,36 @@ const Navbar = () => {
                         >
                             Opportunities
                         </Button>
+                    )}
+                    {( userRole === 'admin' || userRole === 'employer') && (
+                        <Button
+                            color="inherit"
+                            onClick={() => navigate('/freelancers')}
+                            sx={{
+                                color: '#000',
+                                fontWeight: 'bold',
+                                mx: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                },
+                            }}
+                        >
+                            Explore Talents
+                        </Button>
+                        )}
+                        {(userRole === 'admin' || userRole === 'freelancer') && (
+                            <Button color="inherit" onClick={() => navigate('/dashboard')}
+                            sx={{
+                                color: '#000',
+                                fontWeight: 'bold',
+                                mx: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                },
+                            }}>
+                                Opportunities
+                            </Button>
+                        )}
                         <Button
                             color="inherit"
                             onClick={() => navigate('/profile')}

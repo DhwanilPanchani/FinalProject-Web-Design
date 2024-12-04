@@ -5,7 +5,7 @@ const jobSchema = mongoose.Schema({
     description: String,
     location: String,
     hourlyRate: Number,
-    employer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    employer: { type: mongoose.Schema.Types.ObjectId, ref: 'Freelancer' },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Job', jobSchema);
