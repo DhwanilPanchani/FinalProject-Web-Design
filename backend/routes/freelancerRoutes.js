@@ -15,7 +15,11 @@ router.route('/profile')
     .put(protect, updateFreelancerProfile);
 
 //GET route to get all freelancers
+<<<<<<< HEAD
 router.get('/', getAllFreelancers);
+=======
+router.get('/freelancers', getAllFreelancers);
+>>>>>>> f54b7b616 (merge conflict solved)
 
 // POST route to create a freelancer profile
 router.post(
