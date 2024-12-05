@@ -1,9 +1,3 @@
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api/apiClient';
 import { Container, Grid, Card, CardContent, Typography, Button, TextField, Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -49,6 +43,17 @@ const Dashboard = () => {
             console.error('Error updating job:', error);
         }
     };
+    const handleApply = (job) => {
+            if (job?.employer?.email) {
+                const subject = encodeURIComponent(`Application for ${job.title}`);
+                const body = encodeURIComponent(`
+                    Dear ${job.employer.name},\n\nI am interested in the "${job.title}" position you posted. Please let me know how I can proceed further.\n\nThank you!\n\nBest regards,\n[Your Name]
+                `);
+                window.location.href = `mailto:${job.employer.email}?subject=${subject}&body=${body}`;
+            } else {
+                alert('Employer email not available.');
+            }
+        };
 
     const handleDelete = async (jobId) => {
         try {
@@ -103,6 +108,19 @@ const Dashboard = () => {
                                         Hourly Rate: ${job.hourlyRate}
                                     </Typography>
                                     {
+                                        userRole === "freelancer" &&(
+                                            <Button
+                                            variant="contained"
+                                            color="primary"
+                                            fullWidth
+                                            sx={{ mt: 2 }}
+                                            onClick={() => handleApply(job)}
+                                        >
+                                            Contact Employer
+                                        </Button>      
+                                        )
+                                    }
+                                    {
                                         userRole === "admin" &&(
                                             <Button
                                             variant="contained"
@@ -115,6 +133,7 @@ const Dashboard = () => {
                                         </Button>        
                                         )
                                     }
+
                       
                       {
                                         userRole === "admin" &&(
