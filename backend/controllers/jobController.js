@@ -29,12 +29,13 @@ const getJobById = async (req, res) => {
 const createJob = async (req, res) => {
     try {
         const { title, description, location, hourlyRate } = req.body;
+        const userId = req.user._id;
         const job = new Job({
             title,
             description,
             location,
             hourlyRate,
-            employer: req.user._id,
+            employer: userId,
         });
         const savedJob = await job.save();
         res.status(201).json({ data: savedJob });
@@ -42,5 +43,16 @@ const createJob = async (req, res) => {
         res.status(500).json({ message: 'Error creating job', error });
     }
 };
-
-module.exports = { getAllJobs, getJobById , createJob };
+const getMyJobs = async (req, res) => {
+    try{
+        console.log(req.user._id);
+        
+        const userId = req.user._id;
+        const response = await Job.find({employer: userId})
+        res.status(201).json({ data: response});
+    }
+    catch(error){
+        res.status(500).json({ message: 'Error getting jobs', error });
+    }
+}
+module.exports = { getAllJobs, getJobById , createJob, getMyJobs };
