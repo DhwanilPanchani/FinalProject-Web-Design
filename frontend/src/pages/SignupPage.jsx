@@ -33,55 +33,96 @@ const SignupPage = () => {
         }
     };
 
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
     return (
-        <Container maxWidth="sm">
-            <Box sx={{ mt: 5, p: 3, borderRadius: '10px', backgroundColor: '#f5f5f5' }}>
-                <Typography variant="h5" align="center" gutterBottom>
-                    Sign Up
+        <Container maxWidth="sm" sx={{ mt: 5 }}>
+            <Box
+                sx={{
+                    p: 3,
+                    borderRadius: '8px',
+                    backgroundColor: '#fff',
+                    boxShadow: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <Typography variant="h5" align="center" sx={{ mb: 3, fontWeight: 600, color: '#333' }}>
+                    Create a New Account
                 </Typography>
-                <TextField
-                    label="Name"
-                    fullWidth
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Email"
-                    type="email"
-                    fullWidth
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Password"
-                    type="password"
-                    fullWidth
-                    value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    sx={{ mb: 2 }}
-                />
-                <Select
-                    fullWidth
-                    value={form.role}
-                    onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    sx={{ mb: 2 }}
-                >
-                    <MenuItem value="freelancer">Freelancer</MenuItem>
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="employer">Employer</MenuItem>
-                </Select>
-                <Button variant="contained" fullWidth onClick={handleSignup} sx={{ mb: 2 }}>
-                    Sign Up
-                </Button>
-                <Typography align="center">
-                    Already have an account?{' '}
-                    <Button variant="text" onClick={() => navigate('/login')}>
-                        Log In
+
+                <form onSubmit={(e) => e.preventDefault()}>
+                    <TextField
+                        label="Full Name"
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="Email"
+                        name="email"
+                        type="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="Password"
+                        name="password"
+                        type="password"
+                        value={form.password}
+                        onChange={handleChange}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        variant="outlined"
+                    />
+                    <Select
+                        name="role"
+                        value={form.role}
+                        onChange={handleChange}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        variant="outlined"
+                    >
+                        <MenuItem value="freelancer">Freelancer</MenuItem>
+                        <MenuItem value="employer">Employer</MenuItem>
+                    </Select>
+
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={handleSignup}
+                        sx={{
+                            mb: 2,
+                            backgroundColor: '#1dbf73',
+                            '&:hover': {
+                                backgroundColor: '#17a55e',
+                            },
+                        }}
+                    >
+                        Sign Up
                     </Button>
-                </Typography>
+
+                    <Typography align="center" sx={{ mt: 1, fontSize: '14px', color: '#555' }}>
+                        Already have an account?{' '}
+                        <Button
+                            variant="text"
+                            onClick={() => navigate('/login')}
+                            sx={{ fontWeight: 600, color: '#1dbf73' }}
+                        >
+                            Log In
+                        </Button>
+                    </Typography>
+                </form>
             </Box>
+
             <Snackbar
                 open={alert.open}
                 autoHideDuration={4000}
