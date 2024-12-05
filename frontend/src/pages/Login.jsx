@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { login } from '../features/authSlice';
 import { Box, Container, TextField, Button, Typography, Snackbar, Alert } from '@mui/material';
 
 const LoginPage = () => {
@@ -7,6 +9,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [alert, setAlert] = useState({ open: false, message: '', severity: '' });
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = async () => {
         try {
@@ -22,14 +25,16 @@ const LoginPage = () => {
                 localStorage.setItem('token', data.data.token); // Save token
                 localStorage.setItem('role', data.data.role);  // Save role
                 localStorage.setItem('name', data.data.name);  // Save name
-
+                
+                // Dispatch to Redux store
+                dispatch(login(data));
                 setAlert({ open: true, message: 'Login successful!', severity: 'success' });
-
-                if (data.data.role === 'freelancer') {
-                    navigate('/landing');
-                } else {
-                    navigate('/dashboard');
-                }
+                navigate('/landing');
+                // if (data.data.role === 'freelancer') {
+                //     navigate('/landing');
+                // } else {
+                //     navigate('/dashboard');
+                // }
             } else {
                 throw new Error(data.message);
             }

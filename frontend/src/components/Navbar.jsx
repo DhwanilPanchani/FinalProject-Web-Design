@@ -15,6 +15,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
 import apiClient from '../api/apiClient';
 import logo from '../logo.svg'; // Import the logo
+import { useDispatch } from "react-redux";
+import { logout } from "../features/authSlice"; // Import the logout action
 
 const Navbar = () => {
     const [profilePhoto, setProfilePhoto] = useState(null);
@@ -22,6 +24,7 @@ const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null); // State to handle profile menu
     const navigate = useNavigate(); // Use navigate for redirection
     const [userRole, setUserRole] = useState(null); // Store user role
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
@@ -38,7 +41,7 @@ const Navbar = () => {
             }
         };
         fetchProfilePhoto();
-    }, []);
+    }, [localStorage.getItem('role')]);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen); // Toggle drawer state
@@ -53,10 +56,18 @@ const Navbar = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); // Remove token from localStorage
-        localStorage.removeItem('role'); // Remove token from localStorage
-
-        navigate('/login'); // Redirect to login page
+        // Clear local storage
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("name");
+    
+        // Dispatch logout action to update Redux state
+        dispatch(logout());
+    
+        // Redirect to login page
+        navigate("/login");
+    
+        // Close any open menus
         handleMenuClose();
     };
 
@@ -83,7 +94,7 @@ const Navbar = () => {
             <ListItem button onClick={() => { navigate('/profile'); setMobileOpen(false); }}>
                 <ListItemText primary="Profile" />
             </ListItem>
-            <ListItem button onClick={() => { navigate('/'); setMobileOpen(false); }}>
+            <ListItem button onClick={handleLogout}>
                 <ListItemText primary="Logout" />
             </ListItem>
         </List>

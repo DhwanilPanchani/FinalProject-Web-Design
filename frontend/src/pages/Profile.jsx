@@ -137,27 +137,49 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
     return (
         <Box
             sx={{
-                backgroundColor: '#E3F2FD',
+                backgroundImage:'url("/image.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
                 minHeight: '100vh',
                 display: 'flex',
                 justifyContent: 'center',
                 paddingTop: '80px',
+                paddingBottom: '40px',
             }}
         >
             <Container maxWidth="sm">
                 {isEditing ? (
                     <>
                         <Typography
-                            variant="h5"
-                            align="center"
-                            sx={{ fontWeight: 'bold', color: '#0D47A1', mb: 3 }}
-                        >
-                            Edit Profile
+                           variant="h4"
+                           align="center"
+                           sx={{ fontWeight: 'bold', color: '#FFFFFF', mb: 4 }}
+                       >
+                            Edit Your Profile
                         </Typography>
 
-                        <Card sx={{ p: 3, mb: 4, borderRadius: '16px' }}>
+                        <Card sx={{ p: 3,
+                                mb: 4,
+                                borderRadius: '16px',
+                                boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                                backgroundColor: '#FFFFFF', }}>
                             <CardContent>
                                 <Box sx={{ textAlign: 'center', mb: 3 }}>
+                                <Avatar
+                                        alt="Profile Photo"
+                                        src={
+                                            profile.profilePhoto
+                                                ? URL.createObjectURL(profile.profilePhoto)
+                                                : 'https://via.placeholder.com/100'
+                                        }
+                                        sx={{
+                                            width: 100,
+                                            height: 100,
+                                            mx: 'auto',
+                                            mb: 2,
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                                        }}
+                                    />
                                     <Typography variant="body2" sx={{ mb: 1 }}>
                                         Upload Profile Photo
                                     </Typography>
@@ -165,6 +187,7 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                         type="file"
                                         accept="image/png, image/jpeg"
                                         onChange={(e) => handleFileChange(e, 'profilePhoto')}
+                                        style={{ display: 'block', margin: 'auto' }}
                                     />
                                 </Box>
                                 <TextField
@@ -230,8 +253,9 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                     onChange={(e) => setSkillInput(e.target.value)}
                                     onKeyPress={handleSkillAdd}
                                     helperText="Press Enter to add a skill."
+                                    sx={{ mb: 3 }}
                                 />
-                                <Box sx={{ mt: 3 }}>
+                                <Box>
                                     <Typography variant="body2" sx={{ mb: 1 }}>
                                         Upload Resume (PDF)
                                     </Typography>
@@ -239,6 +263,7 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                         type="file"
                                         accept="application/pdf"
                                         onChange={(e) => handleFileChange(e, 'resume')}
+                                        style={{ display: 'block', margin: 'auto' }}
                                         required
                                     />
                                 </Box>
@@ -250,7 +275,13 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                 variant="contained"
                                 color="success"
                                 onClick={handleSubmitProfile}
-                                sx={{ px: 4 }}
+                                sx={{
+                                    px: 4,
+                                    py: 1,
+                                    borderRadius: '20px',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                }}
                             >
                                 Submit Profile
                             </Button>
@@ -258,20 +289,40 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                     </>
                 ) : (
                     <>
-                        <Card sx={{ p: 3, mb: 4, borderRadius: '16px' }}>
+                    <Typography
+                            variant="h4"
+                            align="center"
+                            sx={{ fontWeight: 'bold', color: '#FFFFFF', mb: 4 }}
+                        >
+                            Your Profile
+                        </Typography>
+                        <Card
+                            sx={{
+                                p: 3,
+                                mb: 4,
+                                borderRadius: '16px',
+                                boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                                backgroundColor: '#FFFFFF',
+                            }}
+                        >
                             <CardContent>
-                                <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
-                                    Your Profile
-                                </Typography>
-                                <Avatar
-                                    alt="Profile Photo"
-                                    src={
-                                        profile.profilePhoto
-                                            ? URL.createObjectURL(profile.profilePhoto)
-                                            : 'https://via.placeholder.com/100'
-                                    }
-                                    sx={{ width: 100, height: 100, mb: 2 }}
-                                />
+                            <Box sx={{ textAlign: 'center', mb: 3 }}>
+                                    <Avatar
+                                        alt="Profile Photo"
+                                        src={
+                                            profile.profilePhoto
+                                                ? URL.createObjectURL(profile.profilePhoto)
+                                                : 'https://via.placeholder.com/100'
+                                        }
+                                        sx={{
+                                            width: 120,
+                                            height: 120,
+                                            mx: 'auto',
+                                            mb: 2,
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                                        }}
+                                    />
+                                </Box>
                                 <Typography>Name: {profile.name}</Typography>
                                 <Typography>Email: {profile.email}</Typography>
                                 <Typography>Location: {profile.location}</Typography>
@@ -289,7 +340,13 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => setIsEditing(true)}
-                                sx={{ px: 4 }}
+                                sx={{
+                                    px: 4,
+                                    py: 1,
+                                    borderRadius: '20px',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                }}
                             >
                                 Update Profile
                             </Button>
