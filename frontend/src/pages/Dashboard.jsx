@@ -13,11 +13,12 @@ const Dashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [currentJob, setCurrentJob] = useState(null);
-
+    const [userRole, setUserRole] =useState(null);
     useEffect(() => {
         const fetchJobs = async () => {
             try {
                 const response = await apiClient.get('/jobs');
+                setUserRole(localStorage.getItem("role"));
                 setJobs(response.data.data);
             } catch (error) {
                 console.error(error);
@@ -101,24 +102,34 @@ const Dashboard = () => {
                                     <Typography variant="subtitle2">
                                         Hourly Rate: ${job.hourlyRate}
                                     </Typography>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        fullWidth
-                                        sx={{ mt: 2 }}
-                                        onClick={() => handleEditOpen(job)}
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        fullWidth
-                                        sx={{ mt: 1 }}
-                                        onClick={() => handleDelete(job._id)}
-                                    >
-                                        Delete
-                                    </Button>
+                                    {
+                                        userRole === "admin" &&(
+                                            <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            fullWidth
+                                            sx={{ mt: 2 }}
+                                            onClick={() => handleEditOpen(job)}
+                                        >
+                                            Edit
+                                        </Button>        
+                                        )
+                                    }
+                      
+                      {
+                                        userRole === "admin" &&(
+                                            <Button
+                                            variant="contained"
+                                            color="error"
+                                            fullWidth
+                                            sx={{ mt: 1 }}
+                                            onClick={() => handleDelete(job._id)}
+                                        >
+                                            Delete
+                                        </Button>        
+                                        )
+                                    }
+ 
                                 </CardContent>
                             </Card>
                         </Grid>
