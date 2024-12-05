@@ -39,9 +39,28 @@ const LoginPage = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Box sx={{ mt: 5, p: 3, borderRadius: '10px', backgroundColor: '#f5f5f5' }}>
-                <Typography variant="h5" align="center" gutterBottom>
+        <Box
+            sx={{
+                height: '100vh', // Full viewport height
+                backgroundImage: 'url("https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")',
+                backgroundSize: 'cover', // Ensure image covers entire screen
+                backgroundPosition: 'center', // Center the image
+                display: 'flex',
+                justifyContent: 'center', // Center the content horizontally
+                alignItems: 'center', // Center the content vertically
+            }}
+        >
+            <Container
+                maxWidth="sm"
+                sx={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: 3,
+                    padding: 3,
+                    opacity: 0.9, // Optional: Slight transparency to form background to show image
+                }}
+            >
+                <Typography variant="h5" align="center" sx={{ mb: 3, fontWeight: 600, color: '#333' }}>
                     Login
                 </Typography>
                 <TextField
@@ -60,16 +79,21 @@ const LoginPage = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     sx={{ mb: 2 }}
                 />
-                <Button variant="contained" fullWidth onClick={handleLogin} sx={{ mb: 2 }}>
+                <Button variant="contained" fullWidth onClick={handleLogin} sx={{ mb: 2, backgroundColor: '#1dbf73', '&:hover': { backgroundColor: '#17a55e' } }}>
                     Log In
                 </Button>
-                <Typography align="center">
+                <Typography align="center" sx={{ mt: 1, fontSize: '14px', color: '#555' }}>
                     Don't have an account?{' '}
-                    <Button variant="text" onClick={() => navigate('/signup')}>
+                    <Button
+                        variant="text"
+                        onClick={() => navigate('/signup')}
+                        sx={{ fontWeight: 600, color: '#1dbf73' }}
+                    >
                         Sign Up
                     </Button>
                 </Typography>
-            </Box>
+            </Container>
+
             <Snackbar
                 open={alert.open}
                 autoHideDuration={4000}
@@ -77,7 +101,7 @@ const LoginPage = () => {
             >
                 <Alert severity={alert.severity}>{alert.message}</Alert>
             </Snackbar>
-        </Container>
+        </Box>
     );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Container, TextField, Button, Typography, Snackbar, Alert, Select, MenuItem } from '@mui/material';
+import { Box, Container, TextField, Button, Typography, Snackbar, Alert, Switch, FormControlLabel } from '@mui/material';
 
 const SignupPage = () => {
     const [form, setForm] = useState({
@@ -37,16 +37,31 @@ const SignupPage = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    // Handle toggle of role
+    const handleRoleChange = (event) => {
+        setForm({ ...form, role: event.target.checked ? 'employer' : 'freelancer' });
+    };
+
     return (
-        <Container maxWidth="sm" sx={{ mt: 5 }}>
-            <Box
+        <Box
+            sx={{
+                height: '100vh',
+                backgroundImage: 'url("https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1600")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <Container
+                maxWidth="sm"
                 sx={{
-                    p: 3,
+                    backgroundColor: '#ffffff',
                     borderRadius: '8px',
-                    backgroundColor: '#fff',
                     boxShadow: 3,
-                    display: 'flex',
-                    flexDirection: 'column',
+                    padding: 3,
+                    opacity: 0.9,
                 }}
             >
                 <Typography variant="h5" align="center" sx={{ mb: 3, fontWeight: 600, color: '#333' }}>
@@ -83,17 +98,20 @@ const SignupPage = () => {
                         sx={{ mb: 2 }}
                         variant="outlined"
                     />
-                    <Select
-                        name="role"
-                        value={form.role}
-                        onChange={handleChange}
-                        fullWidth
+
+                    {/* Switch for Role */}
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={form.role === 'employer'}
+                                onChange={handleRoleChange}
+                                name="role"
+                                color="primary"
+                            />
+                        }
+                        label={form.role === 'freelancer' ? 'Freelancer' : 'Employer'}
                         sx={{ mb: 2 }}
-                        variant="outlined"
-                    >
-                        <MenuItem value="freelancer">Freelancer</MenuItem>
-                        <MenuItem value="employer">Employer</MenuItem>
-                    </Select>
+                    />
 
                     <Button
                         variant="contained"
@@ -121,7 +139,7 @@ const SignupPage = () => {
                         </Button>
                     </Typography>
                 </form>
-            </Box>
+            </Container>
 
             <Snackbar
                 open={alert.open}
@@ -130,7 +148,7 @@ const SignupPage = () => {
             >
                 <Alert severity={alert.severity}>{alert.message}</Alert>
             </Snackbar>
-        </Container>
+        </Box>
     );
 };
 

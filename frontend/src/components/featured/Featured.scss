@@ -10,7 +10,7 @@
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;  /* Changed from scroll to fixed */
   
   &::after {
     content: "";
@@ -190,4 +190,4 @@
       }
     }
   }
-} 
+}
