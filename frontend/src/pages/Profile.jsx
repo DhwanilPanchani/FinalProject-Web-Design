@@ -11,6 +11,7 @@ import {
     Chip,
     Snackbar,
     Alert,
+    Grid,
 } from '@mui/material';
 
 const ProfilePage = ({ onUpdateProfilePhoto }) => {
@@ -24,17 +25,58 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
         skills: [],
         profilePhoto: null,
         resume: null,
+        appliedJobs: [], // Added for storing jobs user applied for
     });
 
     const [skillInput, setSkillInput] = useState('');
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const [isEditing, setIsEditing] = useState(true); // Toggle between edit and view modes
 
+    // Load profile data from localStorage or API on component mount
     useEffect(() => {
-        // Automatically populate email from localStorage or API
-        const email = localStorage.getItem('email'); // Assuming email is saved during login
+        const savedProfile = JSON.parse(localStorage.getItem('profile'));
+        if (savedProfile) {
+            setProfile((prev) => ({
+                ...prev,
+                ...savedProfile,
+                profilePhoto:
+                    typeof savedProfile.profilePhoto === 'string'
+                        ? savedProfile.profilePhoto // Use URL or base64 string directly
+                        : null, // Handle case where photo is not in the correct format
+            }));
+            setIsEditing(false); // If data exists, set view mode
+        }
+
+        const email = localStorage.getItem('email'); // Assuming email is stored during login
         if (email) {
             setProfile((prev) => ({ ...prev, email }));
+        }
+
+        // Fetch applied jobs from API if not present in local storage
+        if (!savedProfile?.appliedJobs) {
+            const fetchAppliedJobs = async () => {
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch('http://localhost:3001/api/freelancer/applied-jobs', {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        setProfile((prev) => ({
+                            ...prev,
+                            appliedJobs: result.data, // Set applied jobs
+                        }));
+                        localStorage.setItem(
+                            'profile',
+                            JSON.stringify({ ...savedProfile, appliedJobs: result.data })
+                        ); // Save to localStorage
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch applied jobs:', error);
+                }
+            };
+
+            fetchAppliedJobs();
         }
     }, []);
 
@@ -98,13 +140,18 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
         formData.append('bio', profile.bio);
         formData.append('jobRole', profile.jobRole);
         formData.append('skills', JSON.stringify(profile.skills));
-        formData.append('profilePhoto', profile.profilePhoto);
-        formData.append('resume', profile.resume);
 
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+        if (profile.profilePhoto) {
+            formData.append('profilePhoto', profile.profilePhoto);
+        }
+        if (profile.resume) {
+            formData.append('resume', profile.resume);
+        }
+
+        const token = localStorage.getItem('token'); // Retrieve token
 
         try {
-            const response = await fetch('http://localhost:3001/api/freelancers/profile', {
+            const response = await fetch('http://localhost:3001/api/freelancer/profile', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -112,10 +159,18 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                 body: formData,
             });
 
+            if (!response.ok) {
+                const errorResult = await response.json();
+                throw new Error(errorResult.message || 'Failed to submit profile');
+            }
+
             const result = await response.json();
 
             if (result.success) {
                 onUpdateProfilePhoto(result.data.profilePhoto); // Update Navbar with new profile photo
+
+                // Save profile to localStorage
+                localStorage.setItem('profile', JSON.stringify(result.data));
                 setAlert({
                     open: true,
                     message: 'Profile submitted successfully!',
@@ -123,7 +178,7 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                 });
                 setIsEditing(false); // Switch to view mode
             } else {
-                throw new Error(result.message);
+                throw new Error(result.message || 'Unknown error occurred');
             }
         } catch (error) {
             setAlert({
@@ -239,7 +294,6 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                         type="file"
                                         accept="application/pdf"
                                         onChange={(e) => handleFileChange(e, 'resume')}
-                                        required
                                     />
                                 </Box>
                             </CardContent>
@@ -266,9 +320,11 @@ const ProfilePage = ({ onUpdateProfilePhoto }) => {
                                 <Avatar
                                     alt="Profile Photo"
                                     src={
-                                        profile.profilePhoto
-                                            ? URL.createObjectURL(profile.profilePhoto)
-                                            : 'https://via.placeholder.com/100'
+                                        typeof profile.profilePhoto === 'string'
+                                            ? profile.profilePhoto // Use the string directly if it's a URL or base64
+                                            : profile.profilePhoto instanceof Blob || profile.profilePhoto instanceof File
+                                            ? URL.createObjectURL(profile.profilePhoto) // Create URL if it's a File or Blob
+                                            : 'https://via.placeholder.com/100' // Fallback placeholder
                                     }
                                     sx={{ width: 100, height: 100, mb: 2 }}
                                 />

@@ -55,4 +55,81 @@ const getMyJobs = async (req, res) => {
         res.status(500).json({ message: 'Error getting jobs', error });
     }
 }
-module.exports = { getAllJobs, getJobById , createJob, getMyJobs };
+
+// const applyForJob = async (req, res) => {
+//     try {
+//         const userId = req.user._id;
+//         const jobId = req.params.id;
+
+//         // Add job ID to the user's applied jobs
+//         const job = await Job.findById(jobId);
+
+//         if (!job) {
+//             return res.status(404).json({ success: false, message: 'Job not found' });
+//         }
+
+//         // Assuming you have a User model with an appliedJobs field
+//         const User = require('../models/User');
+//         const user = await User.findById(userId);
+
+//         if (!user) {
+//             return res.status(404).json({ success: false, message: 'User not found' });
+//         }
+
+//         if (user.appliedJobs.includes(jobId)) {
+//             return res.status(400).json({ success: false, message: 'You have already applied for this job' });
+//         }
+
+//         user.appliedJobs.push(jobId);
+//         await user.save();
+
+//         res.status(200).json({ success: true, message: 'Job application successful' });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: error.message });
+//     }
+// };
+
+
+const applyForJob = async (req, res) => {
+    try {
+        const userId = req.user._id; // Logged-in user ID
+        const jobId = req.params.id; // Job ID from request
+
+        const job = await Job.findById(jobId); // Find the job details
+        if (!job) {
+            return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+
+        const User = require('../models/User');
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Check if the user has already applied for this job
+        const alreadyApplied = user.appliedJobs.some((appliedJob) => appliedJob._id.toString() === job._id.toString());
+        if (alreadyApplied) {
+            return res.status(400).json({ success: false, message: 'You have already applied for this job' });
+        }
+
+        // Add job to user's appliedJobs array
+        user.appliedJobs.push({
+            _id: job._id,
+            title: job.title,
+            description: job.description,
+            location: job.location,
+            hourlyRate: job.hourlyRate,
+        });
+
+        await user.save(); // Save updated user record
+
+        res.status(200).json({ success: true, message: 'Successfully applied for the job', appliedJobs: user.appliedJobs });
+    } catch (error) {
+        console.error('Error applying for the job:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
+module.exports = { getAllJobs, getJobById, createJob, getMyJobs, applyForJob };

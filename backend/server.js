@@ -22,6 +22,9 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 app.use('/api/freelancer', freelancerRoutes);
 app.use('/api/auth', authRoutes); // Use the auth routes here
 
+
+
+
 app.use('/api/jobs', jobRoutes);
 // app.use('/api/freelancers', freelancerRoutes);
 
