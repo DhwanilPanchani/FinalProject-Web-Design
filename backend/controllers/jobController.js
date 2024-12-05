@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const Job = require('../models/Job');
-=======
-const Job = require('./models/Job');
->>>>>>> 9052aa3d6 (Freelancer Pages)
 
 // Get All Jobs
 const getAllJobs = async (req, res) => {

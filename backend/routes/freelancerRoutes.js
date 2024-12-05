@@ -1,5 +1,5 @@
 const express = require('express');
-const { getFreelancerProfile, updateFreelancerProfile, createFreelancerProfile } = require('../controllers/freelancerController');
+const { getFreelancerProfile, updateFreelancerProfile, createFreelancerProfile, getAllFreelancers } = require('../controllers/freelancerController');
 const { protect } = require('../middleware/authMiddleware');
 const multer = require('multer'); // For file uploads
 // const { getAllFreelancers } = require('../controllers/freelancerController');
@@ -13,18 +13,10 @@ const upload = multer({ storage });
 router.route('/profile')
     .get(protect, getFreelancerProfile)
     .put(protect, updateFreelancerProfile);
-<<<<<<< HEAD
 
 //GET route to get all freelancers
-<<<<<<< HEAD
 router.get('/', getAllFreelancers);
-=======
-router.get('/freelancers', getAllFreelancers);
->>>>>>> f54b7b616 (merge conflict solved)
 
-=======
-    // router.get('/', getAllFreelancers);
->>>>>>> 66add0f26 (merge conflict solved)
 // POST route to create a freelancer profile
 router.post(
     '/profile',
@@ -38,6 +30,3 @@ router.post(
 console.log('Loading freelancerController.js');
 
 module.exports = router;
-
-
-
