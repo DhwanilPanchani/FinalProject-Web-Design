@@ -36,6 +36,15 @@ const LandingPage = () => {
     ];
 
     const [currentBackground, setCurrentBackground] = useState(0);
+    const [userName, setUserName] = useState('');
+
+    // Fetch the username from localStorage
+    useEffect(() => {
+        const name = localStorage.getItem('name');
+        if (name) {
+            setUserName(name); // Set the username if available in localStorage
+        }
+    }, []);
 
     // Change background every 5 seconds
     useEffect(() => {
@@ -87,7 +96,7 @@ const LandingPage = () => {
                         textShadow: '2px 2px 6px rgba(0, 0, 0, 0.6)',
                     }}
                 >
-                    Welcome Freelancer!
+                    {userName ? `Welcome ${userName}!` : 'Welcome Freelancer!'}
                 </Typography>
                 <Typography
                     variant="h6"
