@@ -165,19 +165,6 @@ const Navbar = () => {
                             Explore Talents
                         </Button>
                         )}
-                        {(userRole === 'admin' || userRole === 'freelancer') && (
-                            <Button color="inherit" onClick={() => navigate('/dashboard')}
-                            sx={{
-                                color: '#000',
-                                fontWeight: 'bold',
-                                mx: 1,
-                                '&:hover': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                },
-                            }}>
-                                Opportunities
-                            </Button>
-                        )}
                         <Button
                             color="inherit"
                             onClick={() => navigate('/profile')}

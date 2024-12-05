@@ -8,7 +8,7 @@ const FreelancerList = () => {
     useEffect(() => {
         const fetchFreelancers = async () => {
             try {
-                const response = await apiClient.get('/freelancers');
+                const response = await apiClient.get('/freelancer');
                 setFreelancers(response.data.data);
             } catch (error) {
                 console.error(error);
