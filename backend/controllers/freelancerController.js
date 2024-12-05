@@ -13,32 +13,14 @@ const getFreelancerProfile = async (req, res) => {
         const freelancer = await Freelancer.findOne({ user: req.user.id });
 
         if (!freelancer) {
-            return res.status(404).json({ success: false, message: 'Freelancer profile not found.' });
+            return res.status(404).json({ success: false, message: 'Freelancer profile not found' });
         }
 
-        // Convert buffer to base64 for display purposes
-        const profilePhoto = freelancer.profilePhoto
-            ? `data:${freelancer.profilePhoto.contentType};base64,${freelancer.profilePhoto.data.toString('base64')}`
-            : null;
-
-        const resume = freelancer.resume
-            ? `data:${freelancer.resume.contentType};base64,${freelancer.resume.data.toString('base64')}`
-            : null;
-
-        res.status(200).json({
-            success: true,
-            data: {
-                ...freelancer._doc,
-                profilePhoto,
-                resume,
-            },
-        });
+        res.status(200).json({ success: true, data: freelancer });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
-
 
 // Update Freelancer Profile
 const updateFreelancerProfile = async (req, res) => {
@@ -70,11 +52,6 @@ const createFreelancerProfile = async (req, res) => {
         // Parse skills if sent as a string
         const parsedSkills = Array.isArray(skills) ? skills : JSON.parse(skills);
 
-        // Prepare files (buffer)
-        const profilePhoto = req.files?.profilePhoto?.[0] || null;
-        const resume = req.files?.resume?.[0] || null;
-
-        // Create the freelancer object
         const freelancer = new Freelancer({
             user: req.user.id,
             name,
@@ -83,10 +60,8 @@ const createFreelancerProfile = async (req, res) => {
             bio,
             jobRole,
             skills: parsedSkills,
-            profilePhoto: profilePhoto
-                ? { data: profilePhoto.buffer, contentType: profilePhoto.mimetype }
-                : undefined,
-            resume: resume ? { data: resume.buffer, contentType: resume.mimetype } : undefined,
+            profilePhoto: profilePhotoUrl,
+            resume: resumeUrl,
         });
 
         await freelancer.save();
@@ -94,14 +69,13 @@ const createFreelancerProfile = async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Freelancer profile created successfully.',
-            data: freelancer,
+            data: { ...freelancer._doc, profilePhoto: profilePhotoUrl },
         });
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ success: false, message: 'Server error. Please try again later.' });
     }
 };
-
 
 module.exports = {
     getFreelancerProfile,

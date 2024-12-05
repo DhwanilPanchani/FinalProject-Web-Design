@@ -6,6 +6,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+<<<<<<< HEAD
+=======
+.searchbar-freelancer{
+  margin-top: 40px;
+  border: 0.5px solid black;
+}
+>>>>>>> e1ebee0 (Darshan| aadded filter, added search, edit & delete)
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

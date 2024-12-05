@@ -32,4 +32,8 @@ app.use(express.static(path.join(__dirname, '../frontend/build')));
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server started running on port ${PORT}`);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> e1ebee0 (Darshan| aadded filter, added search, edit & delete)

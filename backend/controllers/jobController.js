@@ -55,4 +55,38 @@ const getMyJobs = async (req, res) => {
         res.status(500).json({ message: 'Error getting jobs', error });
     }
 }
-module.exports = { getAllJobs, getJobById , createJob, getMyJobs };
+
+const updateJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const updatedJob = await Job.findByIdAndUpdate(jobId, req.body, { new: true });
+ 
+        if (!updatedJob) {
+            return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+ 
+        res.status(200).json({ success: true, data: updatedJob });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+ 
+const deleteJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const deletedJob = await Job.findByIdAndDelete(jobId);
+ 
+        if (!deletedJob) {
+            return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+ 
+        res.status(200).json({ success: true, message: 'Job deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+ 
+
+module.exports = { getAllJobs, getJobById, createJob, getMyJobs, updateJob, deleteJob };
+
+// module.exports = { getAllJobs, getJobById , createJob, getMyJobs };

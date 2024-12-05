@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import apiClient from '../api/apiClient';
 import { Grid, Card, CardContent, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -7,47 +9,45 @@ const JobList = () => {
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                const response = await apiClient.get('/jobs');
-                setJobs(response.data.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
         fetchJobs();
     }, []);
 
+    const fetchJobs = async () => {
+        try {
+            const response = await axios.get('/jobs');
+            setJobs(response.data.data);
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`/api/jobs/${id}`);
+            setJobs(jobs.filter((job) => job._id !== id));
+        } catch (error) {
+            console.error('Error deleting job:', error);
+        }
+    };
+
+    const handleEdit = (id) => {
+        // Navigate to an edit page or open a modal
+        window.location.href = `/edit-job/${id}`;
+    };
+
     return (
-        <Grid container spacing={3} sx={{ mt: 3 }}>
+        <div className="job-list">
             {jobs.map((job) => (
-                <Grid item xs={12} sm={6} md={4} key={job._id}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6">{job.title}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {job.description}
-                            </Typography>
-                            <Typography variant="subtitle2" sx={{ mt: 1 }}>
-                                Location: {job.location}
-                            </Typography>
-                            <Typography variant="subtitle2">
-                                Hourly Rate: ${job.hourlyRate}
-                            </Typography>
-                            <Button
-                                component={Link}
-                                to={`/jobs/${job._id}`}
-                                variant="contained"
-                                color="primary"
-                                sx={{ mt: 2 }}
-                            >
-                                View Details
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                <div key={job._id} className="job-card">
+                    <h3>{job.title}</h3>
+                    <p>{job.description}</p>
+                    <p>Location: {job.location}</p>
+                    <p>Hourly Rate: ${job.hourlyRate}</p>
+                    <button onClick={() => handleEdit(job._id)}>Edit</button>
+                    <button onClick={() => handleDelete(job._id)}>Delete</button>
+                </div>
             ))}
-        </Grid>
+        </div>
     );
 };
 
