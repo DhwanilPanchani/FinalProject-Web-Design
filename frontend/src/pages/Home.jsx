@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Carousel from 'react-bootstrap/Carousel';
 import Accordion from 'react-bootstrap/Accordion';
 import "./Home.scss"
 import Featured from '../components/featured/Featured';
