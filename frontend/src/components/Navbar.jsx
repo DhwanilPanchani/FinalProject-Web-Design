@@ -68,6 +68,20 @@ const Navbar = () => {
             {/* <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
                 <ListItemText primary="Opportunities" />
             </ListItem> */}
+            { ( userRole === "freelancer" || userRole === "admin") && (
+                <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
+                     {/* link /opportunities path to get the jobs */}
+                    <ListItemText primary="Job Opportunities" />
+                </ListItem>
+            )}
+            { ( userRole === "employer" || userRole === "admin") && (
+                <ListItem button onClick={() => { navigate('/jobs/create'); setMobileOpen(false); }}>
+                    <ListItemText primary="Post Jobs" />
+                </ListItem> ) }
+            { ( userRole === "employer" || userRole === "admin") && (
+                <ListItem button onClick={() => { navigate('/jobs/current'); setMobileOpen(false); }}>
+                    <ListItemText primary="My Jobs" />
+                </ListItem> ) } 
             { ( userRole === "employer" || userRole === "admin") && (
                 <ListItem button onClick={() => { navigate('/freelancers'); setMobileOpen(false); }}>
                     {/* link /freelancers path to get the freelancers */}
@@ -75,14 +89,11 @@ const Navbar = () => {
                 </ListItem> 
             )}
             { ( userRole === "freelancer" || userRole === "admin") && (
-                <ListItem button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }}>
-                     {/* link /opportunities path to get the jobs */}
-                    <ListItemText primary="Job Opportunities" />
-                </ListItem>
-            )}
             <ListItem button onClick={() => { navigate('/profile'); setMobileOpen(false); }}>
                 <ListItemText primary="Profile" />
             </ListItem>
+            )}
+
             <ListItem button onClick={() => { navigate('/'); setMobileOpen(false); }}>
                 <ListItemText primary="Logout" />
             </ListItem>
@@ -163,8 +174,42 @@ const Navbar = () => {
                             }}
                         >
                             Explore Talents
-                        </Button>
-                        )}
+                        </Button>) }
+                     {( userRole === 'admin' || userRole === 'employer') && (
+
+                        ( <Button
+                            color="inherit"
+                            onClick={() => navigate('/jobs/create')}
+                            sx={{
+                            color: '#000',
+                            fontWeight: 'bold',
+                            mx: 1,
+                            '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                            },
+                            }}
+                            >
+                            Post Jobs
+                        </Button>)) }
+
+                        { (  userRole === 'employer') &&
+                        ( <Button
+                            color="inherit"
+                            onClick={() => navigate('/jobs/current')}
+                            sx={{
+                            color: '#000',
+                            fontWeight: 'bold',
+                            mx: 1,
+                            '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                            },
+                            }}
+                            >
+                            My Jobs
+                        </Button>)
+                        }
+
+                    { ( userRole === 'admin' || userRole === 'freelancer') && (
                         <Button
                             color="inherit"
                             onClick={() => navigate('/profile')}
@@ -179,6 +224,8 @@ const Navbar = () => {
                         >
                             Profile
                         </Button>
+                        )
+                    }
                         <IconButton
                             onClick={handleMenuOpen}
                             sx={{
@@ -202,7 +249,7 @@ const Navbar = () => {
                                     },
                                 }}
                             >
-                            F
+                            A 
                             </Avatar>
                         </IconButton>
                         <Menu

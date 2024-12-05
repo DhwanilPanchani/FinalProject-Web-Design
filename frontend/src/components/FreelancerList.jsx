@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api/apiClient';
-import { Grid2, Card, CardContent, Typography, Avatar } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Avatar } from '@mui/material';
 
 const FreelancerList = () => {
     const [freelancers, setFreelancers] = useState([]);
@@ -18,9 +18,9 @@ const FreelancerList = () => {
     }, []);
 
     return (
-        <Grid2 container spacing={3} sx={{ mt: 3 }}>
+        <Grid container spacing={3} sx={{ mt: 3 }}>
             {freelancers.map((freelancer) => (
-                <Grid2 item xs={12} sm={6} md={4} key={freelancer._id}>
+                <Grid item xs={12} sm={6} md={4} key={freelancer._id}>
                     <Card>
                         <CardContent>
                             <Avatar
@@ -43,9 +43,9 @@ const FreelancerList = () => {
                             </Typography>
                         </CardContent>
                     </Card>
-                </Grid2>
+                </Grid>
             ))}
-        </Grid2>
+        </Grid>
     );
 };
 

@@ -8,6 +8,8 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import SignupPage from './pages/SignupPage';
 import FreelancerList from './components/FreelancerList';
+import PostJob from './components/PostJob';
+import MyJobs from './components/MyJobs';
 
 // import LandingPage from "./"
 function App() {
@@ -37,7 +39,8 @@ function App() {
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/jobs/:id" element={<JobDetails />} />
                                 <Route path="/freelancers" element={<FreelancerList />} />
-                                {/* <Route path="/jobs/:id" element={<JobDetails />} /> */}
+                                <Route path="/jobs/create" element={<PostJob />} />
+                                <Route path="/jobs/current" element={<MyJobs />} />
 
                                 {/* Pass onUpdateProfilePhoto to Profile */}
                                 <Route
