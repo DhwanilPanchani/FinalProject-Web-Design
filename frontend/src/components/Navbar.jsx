@@ -89,6 +89,15 @@ const Navbar = () => {
                     {/* link /opportunities path to get the jobs */}
                     <ListItemText primary="Job Opportunities" />
                 </ListItem>
+<<<<<<< HEAD
+=======
+            )}
+            {(userRole === "freelancer" || userRole === "admin") && (
+
+                <ListItem button onClick={() => { navigate('/profile'); setMobileOpen(false); }}>
+                    <ListItemText primary="Profile" />
+                </ListItem>
+>>>>>>> 93842b008 (Merge branch 'main' of https://github.com/DhwanilPanchani/Demo-Web-Design)
             )}
             {(userRole === "freelancer" || userRole === "admin") && (
 

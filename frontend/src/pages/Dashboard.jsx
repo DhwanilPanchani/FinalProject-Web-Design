@@ -112,12 +112,17 @@ const Dashboard = () => {
                                     </Button>
                                     <Button
                                         variant="contained"
-                                        color="error"
+                                        color="primary"
                                         fullWidth
-                                        sx={{ mt: 1 }}
-                                        onClick={() => handleDelete(job._id)}
+                                        sx={{ borderRadius: '20px',
+                                            textTransform: 'none',
+                                            fontWeight: 'bold',
+                                            padding: '10px 20px',
+                                            '&:hover': {
+                                                backgroundColor: '#1565C0',
+                                            }, }}
                                     >
-                                        Delete
+                                        Apply Now
                                     </Button>
                                 </CardContent>
                             </Card>

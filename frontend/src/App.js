@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+>>>>>>> 93842b008 (Merge branch 'main' of https://github.com/DhwanilPanchani/Demo-Web-Design)
 import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
